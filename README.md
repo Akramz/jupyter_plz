@@ -3,9 +3,7 @@
 `%plz` is a Jupyter magic command that generates programs from human-readable descriptions in Jupyter notebooks.
 
 
-
-https://user-images.githubusercontent.com/11509740/210078522-dfa7b88c-0d12-48ba-9981-d85f28a01bb1.mp4
-
+https://user-images.githubusercontent.com/11509740/210084133-61f2cb2d-9968-4b01-8a67-85fcb92eb312.mov
 
 
 ## Installation
