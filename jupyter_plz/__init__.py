@@ -8,7 +8,7 @@ from IPython.core.magic import register_line_magic
 # Set Package-level constants
 __author__ = """Akram Zaytar"""
 __email__ = 'zaytarakram@gmail.com'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 
 def get_openai_api_key() -> str:
