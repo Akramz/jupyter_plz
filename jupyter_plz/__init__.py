@@ -1,9 +1,6 @@
 """Top-level package for plz."""
-import itertools
 import os
-import time
 import requests
-import threading
 from typing import Tuple
 from IPython.display import Code
 from IPython.core.magic import register_line_magic
@@ -145,37 +142,8 @@ def plz(line: str) -> Code:
     # Get the output format and the prompt
     output_format, prompt = process_prompt(line)
 
-    # Define the spinner characters
-    animation_chars = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
-
-    # Create a flag to stop the spinner
-    stop_flag = False
-
-    def spinner_thread():
-        # Create an infinite loop
-        while not stop_flag:
-            # Print the current character and flush the output
-            print(f"{next(spinner_iter)}", end="\r", flush=True)
-
-            # Delay the loop for 0.1 seconds
-            time.sleep(0.1)
-
-        # Clear the spinner
-        print("↓" + (" " * 30), end="\r", flush=True)
-
-    # Create an iterator for the spinner characters
-    spinner_iter = itertools.cycle(animation_chars).__iter__()
-
-    # Start the spinner in a separate thread
-    thread = threading.Thread(target=spinner_thread)
-    thread.start()
-
     # Get the suggestion
     code = get_suggestion(api_key, prompt, output_format)
-
-    # Stop the spinner
-    stop_flag = True
-    thread.join()
 
     # Output the code back to the user
     return Code(code, language=output_format.lower())
