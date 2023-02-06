@@ -2,7 +2,6 @@
 
 `%plz` is a Jupyter magic command that generates programs from human-readable descriptions in Jupyter notebooks.
 
-
 https://user-images.githubusercontent.com/11509740/210084133-61f2cb2d-9968-4b01-8a67-85fcb92eb312.mov
 
 
@@ -20,14 +19,9 @@ pip install plz
 
 - Activate billing on your OpenAI [account](https://beta.openai.com/account/billing/overview).
 - Grab an API key from [your dashboard](https://beta.openai.com/).
-- Save the key as an environment variable named `OPENAI_API_KEY`.
-  - *Note*: you can also save it in your `bash/zsh profile` files for persistence between sessions.
+- Provide the API key to the `jupyter_plz` package upon request inside your notebook.
 
-```bash
-export OPENAI_API_KEY='sk-XXXXXXXX'
-```
-
-Once you have configured your environment, run `plz` followed by (optionally, the desired output format) and what you want to do. Example:
+Once you have configured your environment, you can run the `plz` magic command in your notebook. Example:
 
 ```bash
 %plz "create a function that generates a random walk in the form of an array."
