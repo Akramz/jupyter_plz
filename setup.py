@@ -10,13 +10,11 @@ with open('README.md') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-# Get the requirements from `requirements.txt`
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
+# Set the requirements
+requirements = ["notebook", "requests", "typing", "ipython", "setuptools"]
 
-# Get the test requirements from `requirements_dev.txt`
-with open('requirements_dev.txt') as f:
-    test_requirements = f.read().splitlines()
+# Set the test requirements
+test_requirements = []
 
 setup(
     author="Akram Zaytar",
