@@ -1,6 +1,6 @@
 """Top-level package for plz."""
-import os
 import requests
+from pathlib import Path
 from typing import Tuple
 from IPython.display import Code
 from IPython.core.magic import register_line_magic
@@ -8,25 +8,32 @@ from IPython.core.magic import register_line_magic
 # Set Package-level constants
 __author__ = """Akram Zaytar"""
 __email__ = 'zaytarakram@gmail.com'
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 
 def get_openai_api_key() -> str:
-    """Get the OpenAI API key from the environment variable `OPENAI_API_KEY`. Raises an error if it doesn't exist.
+    """Gets the OpenAI API key from the file `~/.jupyter_plz/keys.txt`.
 
     Returns:
         str: The OpenAI API key
     """
+    # Get the path to the file `~/.jupyter_plz/keys.txt` using Pathlib
+    keys_file_path = Path.home() / '.jupyter_plz' / 'keys.txt'
 
-    # Get the OpenAI API key from the environment variable OPENAI_API_KEY
-    openai_api_key = os.environ.get('OPENAI_API_KEY')
+    # Check if the file `~/.jupyter_plz/keys.txt` exists
+    if keys_file_path.exists():
+        # If it does, get the OpenAI API key from it (first line)
+        with open(keys_file_path, 'r') as f:
+            openai_api_key = f.readline()
+    else:
+        # If it doesn't, ask the user to input the key using `input()`
+        openai_api_key = input('Please input your OpenAI API key: ')
 
-    # If the OpenAI API key is not found, raise an error
-    if openai_api_key is None:
-        raise ValueError('The `OPENAI_API_KEY` environment variable is not found. '
-                         'Please export it in your shell. '
-                         'For example: `export OPENAI_API_KEY=<your_api_key>` or '
-                         'add it to your `.bashrc` (or other) file.')
+        # Save the key in the file `~/.jupyter_plz/keys.txt` (first line)
+        keys_file_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(keys_file_path, 'w') as f:
+            # Write the key to the file without a newline character
+            f.write(openai_api_key)
 
     # Return the OpenAI API key
     return openai_api_key
