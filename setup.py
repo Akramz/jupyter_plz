@@ -10,9 +10,13 @@ with open('README.md') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [ 'notebook' ]
+# Get the requirements from `requirements.txt`
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
 
-test_requirements = [ ]
+# Get the test requirements from `requirements_dev.txt`
+with open('requirements_dev.txt') as f:
+    test_requirements = f.read().splitlines()
 
 setup(
     author="Akram Zaytar",
@@ -39,6 +43,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/akramz/jupyter_plz',
-    version='0.1.4',
+    version='0.1.5',
     zip_safe=False,
 )
