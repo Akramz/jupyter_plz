@@ -2,8 +2,10 @@
 import requests
 from pathlib import Path
 from typing import Tuple
+from IPython import get_ipython
 from IPython.display import Code
 from IPython.core.magic import register_line_magic
+from requests.adapters import HTTPAdapter, Retry
 
 # Set Package-level constants
 __author__ = """Akram Zaytar"""
@@ -107,8 +109,19 @@ def get_suggestion(api_key,
         str: The suggestion
     """
 
+    # Create a session
+    session = requests.Session()
+
+    # Create a retry adapter
+    retries = Retry(total=5,
+                    backoff_factor=0.1,
+                    status_forcelist=[500, 502, 503, 504])
+
+    # Mount the retry adapter to the session
+    session.mount('https://', HTTPAdapter(max_retries=retries))
+
     # Use the `requests` library to send a POST request to OpenAI's API: https://api.openai.com/v1/completions
-    res = requests.post(
+    res = session.post(
         "https://api.openai.com/v1/completions",
         headers={"Authorization": f"Bearer {api_key}"},
         json={
@@ -135,22 +148,48 @@ def get_suggestion(api_key,
     return code
 
 
-@register_line_magic
-def plz(line: str) -> Code:
-    """Magic function to use plz in Jupyter notebooks.
+# Check if `get_ipython` exists
+if not get_ipython():
 
-    Args:
-        line (str): the user prompt used to generate Python code.
-    """
+    # Inform the `terminal` user that they can use the `plz()` function directly in their terminal
+    # Instead of `print`, use a logger to log the message
+    print("Use the `jupyter_plz.plz` function directly in your terminal.")
+    
 
-    # Get the user's API key
-    api_key = get_openai_api_key()
+    def plz(prompt: str, output_format: str = "Python") -> Code:
+        """Returns helper code to terminal users. (not a magic function)
 
-    # Get the output format and the prompt
-    output_format, prompt = process_prompt(line)
+        Args:
+            prompt (str): a natural language description of what the user wants.
+            output_format (str, optional): the desired output format. Defaults to "Python".
+        """
 
-    # Get the suggestion
-    code = get_suggestion(api_key, prompt, output_format)
+        # Get the user's API key
+        api_key = get_openai_api_key()
 
-    # Output the code back to the user
-    return Code(code, language=output_format.lower())
+        # Get the suggestion
+        code = get_suggestion(api_key, prompt, output_format)
+
+        # Output the code back to the user
+        return Code(code, language=output_format.lower())
+
+else:
+    @register_line_magic
+    def plz(line: str) -> Code:
+        """Magic function to use plz in Jupyter notebooks.
+
+        Args:
+            line (str): the user prompt used to generate Python code.
+        """
+
+        # Get the user's API key
+        api_key = get_openai_api_key()
+
+        # Get the output format and the prompt
+        output_format, prompt = process_prompt(line)
+
+        # Get the suggestion
+        code = get_suggestion(api_key, prompt, output_format)
+
+        # Output the code back to the user
+        return Code(code, language=output_format.lower())
