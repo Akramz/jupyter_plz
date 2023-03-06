@@ -10,7 +10,7 @@ from requests.adapters import HTTPAdapter, Retry
 # Set Package-level constants
 __author__ = """Akram Zaytar"""
 __email__ = 'zaytarakram@gmail.com'
-__version__ = '0.1.4'
+__version__ = '0.1.6'
 
 
 def get_openai_api_key() -> str:
@@ -154,7 +154,6 @@ if not get_ipython():
     # Inform the `terminal` user that they can use the `plz()` function directly in their terminal
     # Instead of `print`, use a logger to log the message
     print("Use the `jupyter_plz.plz` function directly in your terminal.")
-    
 
     def plz(prompt: str, output_format: str = "Python") -> Code:
         """Returns helper code to terminal users. (not a magic function)
